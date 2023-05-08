@@ -14,7 +14,7 @@ compile java file:
 
 ```
 $ javac -classpath $(hadoop classpath) MapReduceHadoop.java
-$ jar cf hotel-revenue.jar MapReduceExample*.class
+$ jar cf hotel-revenue.jar MapReduceHadoop*.class
 ```
 
 place input file to HDFS:
