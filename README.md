@@ -17,19 +17,20 @@ $ javac -classpath $(hadoop classpath) MapReduceHadoop.java
 $ jar cf hotel-revenue.jar MapReduceHadoop*.class
 ```
 
-place input file to HDFS:
+place input files to HDFS:
 
 ```
-$ hdfs dfs -put path/to/input_file.csv /input
+$ hdfs dfs -mkdir /input
+$ hdfs dfs -put path/to/customer-reservations.csv /path/to/hotel-booking.csv /input
 ```
 
-submit hadoop job:
+submit Hadoop job:
 
 ```
-hadoop jar hotel-revenue.jar MapReduceHadoop /input /output
+hadoop jar hotel-revenue.jar MapReduceHadoop /input/customer-reservations.csv /input/hotel-booking.csv /output
 ```
 
-place output on local disk:
+place output of Hadoop job on local disk:
 
 ```
 hdfs dfs -get /output path/to/local_disk
