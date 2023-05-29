@@ -13,6 +13,7 @@
 import sys
 import os
 
+
 def main():
     # read in output file from the command line
     try:
@@ -25,7 +26,7 @@ def main():
     for line in file_object:
         # convert line to key-value pair
         line = "=".join(line.split())
-        tmp_dict = dict(item.split('=') for item in line.split(','))
+        tmp_dict = dict(item.split("=") for item in line.split(","))
 
         # - insert key-value pair into dictionary
         # - make sure to convert revenue to a float and round to 2 decmial
@@ -35,7 +36,7 @@ def main():
 
     # sort the dictionary that contains all key-value pairs of month/year-revenue
     # by value (i.e revenue)
-    sorted_revenue = sorted(revenue_dict.items(), key=lambda x:x[1])
+    sorted_revenue = sorted(revenue_dict.items(), key=lambda x: x[1])
 
     # print out the dictionary in reverse so that the key-value pair with the
     # highest revenue gets printed out first
