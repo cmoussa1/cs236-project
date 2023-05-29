@@ -47,5 +47,76 @@ def main():
 
     file_object.close()
 
+    print()
+    print("-----------------")
+    print()
+
+    #######################################
+    # start of extra credit opportunities #
+    #######################################
+
+    print("output extra credit opportunities\n")
+
+    # extra credit 1: enriching data set
+
+    # dictionary that specifies which season a month belongs to
+    seasons = {
+        "fall": [9, 10, 11],
+        "winter": [12, 1, 2],
+        "spring": [3, 4, 5],
+        "summer": [6, 7, 8],
+    }
+
+    # first, we need to move our key-value pairs into their respective
+    # "seasons" bins, as defined by the seasons dictionary above
+    fall = []
+    winter = []
+    spring = []
+    summer = []
+
+    # "for every key in the dictionary"
+    for i in revenue_dict:
+        month_year = i.split("-")
+        if int(month_year[0]) in seasons["fall"]:
+            fall.append(i)
+        elif int(month_year[0]) in seasons["winter"]:
+            winter.append(i)
+        elif int(month_year[0]) in seasons["spring"]:
+            spring.append(i)
+        else:
+            summer.append(i)
+
+    # now, add up the revenue for each season
+    fall_revenue = 0.0
+    for key in fall:
+        fall_revenue += revenue_dict[key]
+
+    winter_revenue = 0.0
+    for key in winter:
+        winter_revenue += revenue_dict[key]
+
+    spring_revenue = 0.0
+    for key in spring:
+        spring_revenue += revenue_dict[key]
+
+    summer_revenue = 0.0
+    for key in summer:
+        summer_revenue += revenue_dict[key]
+
+    seasonal_revenue = {}
+    seasonal_revenue["fall"] = round(float(fall_revenue), 2)
+    seasonal_revenue["winter"] = round(float(winter_revenue), 2)
+    seasonal_revenue["spring"] = round(float(spring_revenue), 2)
+    seasonal_revenue["summer"] = round(float(summer_revenue), 2)
+
+    print(
+        f"max seasonal revenue was in {max(seasonal_revenue, key=lambda key: seasonal_revenue[key])}: ${max(seasonal_revenue.values())}\n"
+    )
+
+    print("seasonal revenue rankings (descending order):")
+    for season in seasonal_revenue:
+        print(f"   {season} - ${seasonal_revenue[season]}")
+
+
 if __name__ == "__main__":
     main()
