@@ -44,6 +44,9 @@ $ python3 sort-output.py path/to/output-file
 ```
 
 #### about the code
+
+![mapreduce-diagram](https://github.com/cmoussa1/cs236-project/blob/main/mapreduce%20diagram.png)
+
 The Java source code runs a MapReduce job on a couple of large `.csv` file that
 contain revenue data for a hotel that spans a couple of years. We do this by
 creating an instance of the `Job` class; this represents the Hadoop job that
