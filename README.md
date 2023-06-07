@@ -4,7 +4,7 @@ A project that implements MapReduce on hotel booking data to find the most
 profitable month.
 
 #### members
-Christopher Moussa
+Christopher Moussa (Student ID 862327381)
 
 Ramesh Subramaniam
 
@@ -118,6 +118,17 @@ _key_. This creates a sorted list which is stored in `sorted_revenue`.
 
 The time complexity of calling `sorted()` on this list of tuples is O(n log n)
 by using the Timsort sorting algorithm[1].
+
+#### detailed contribution by partner
+
+##### christopher moussa
+
+* set up GitHub repository for project
+* wrote MapReduce Java code
+* wrote data output sorting Python code
+* created project README and project description
+* created high-level diagram for both MapReduce job and project workflow
+(linked in repository and in README)
 
 #### references
 
