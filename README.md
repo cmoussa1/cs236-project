@@ -160,8 +160,10 @@ _by key_:
 ```
 
 This is helpful, but we want to sort these key-value pairs by revenue and not
-by key. So, the repository contains another script written in Python that is
-responsible for sorting the key-value pairs.
+by key. We also might be interested in enriching the data in formats _besides_
+just by month-year. So, the repository contains another script written in Python
+that is responsible for sorting the key-value pairs, both in the initial format
+required by the project in addition to a couple of other interesting orders.
 
 The script parses the output file line-by-line and creates a key-value pair for
 each month/year-to-revenue pair:
@@ -191,6 +193,14 @@ _key_. This creates a sorted list which is stored in `sorted_revenue`.
 
 The time complexity of calling `sorted()` on this list of tuples is O(n log n)
 by using the Timsort sorting algorithm[2].
+
+In terms of ranking the key-value pairs by their total revenue in decreasing
+order, the Python script also sorts the data in a couple of other potentially
+interesting formats:
+
+* ranks total revenue by "season" (aggregates all "fall" months, "winter"
+months, etc.)
+* ranks total revenue by "year" (also in descending order)
 
 #### detailed contribution by partner
 
