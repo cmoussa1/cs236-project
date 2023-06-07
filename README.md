@@ -65,16 +65,89 @@ the volume of data sent. It's important to note that it does the same things as
 the `Reducer` class, but operates within the output of each mapper.
 
 We create our key in the `map()` function according to the arrival month and
-year because we want to associate revenue to a specific month/year. The mapper
-will output this key along with the average price per room, and this data will
-be sent to the reducer.
+year because we want to associate revenue to a specific month and year.
+
+```java
+String comp_key = arrival_mo + "-" + arrival_yr;
+
+// output key
+out_key.set(comp_key);
+```
+
+Parsing _most_ of the data we need is pretty straightforward. Because the data
+is in `.csv` format, we can just fetch (and cast) the necessary data using an
+array of `String`s:
+
+```java
+String[] csv_input_fields = value.toString().split(",");
+```
+
+Then, we can parse each field according to its index in the comma-delimited
+line:
+
+```java
+avg_price_per_room = Double.parseDouble(csv_input_fields[8]);
+arrival_yr = Integer.parseInt(csv_input_fields[4]);
+arrival_mo = Integer.parseInt(csv_input_fields[5]);
+```
+
+Note that we still have to cast each field to its respective data type from
+when it is initially read in the `.csv` file.
+
+Because the data in `customer-reservations.csv` and `hotel-booking.csv` is
+formatted differently, in our `map()` function, we need to convert some of
+this data so we can correctly create our keys before sending them to be
+reduced and have their revenue data aggregated. Specifically, the
+"arrival_month" field in `hotel-booking.csv` is written in String format, not
+in an integer format like `customer-reservations.csv`. So, the code contains a
+`switch` statement to associate each "string" month with its integer
+equivalent:
+
+```java
+switch(csv_input_fields[4]) {
+  case "January":
+    arrival_mo = 1;
+    break;
+
+  case "February":
+    arrival_mo = 2;
+    break;
+  
+  ...
+
+  case "December":
+    arrival_mo = 12;
+    break;
+```
+
+The mapper will output this key along with the average price per room, and this
+data will be sent to the reducer.
+
+```java
+out_key.set(comp_key);
+out_value.set(avg_price_per_room);
+```
 
 Within the `Reducer` class, we pass the key-value pairs we created in `map()`,
 where the average price per room values are iterated over and applied to a
 `total_revenue` variable. This becomes the final value applied to each key
 containing a month/year.
 
-The key-value pairs are written to an output file where they are sorted by key:
+The `reduce()` function takes each month-year composite key, and for each key,
+iterates over its `Double` values using a for-each loop[1]. They are then
+aggregated to the `total_revenue` variable. So, at the end of each loop, the
+key will have a sum of all revenue associated with the current key. In total,
+there will be a for-each loop for every month-year key created in the `map()`
+function.
+
+```java
+for (DoubleWritable value : values) {
+  total_revenue += value.get();
+}
+```
+
+The key-value pairs are written to an output file where they are sorted
+_by key_:
 
 ```
 1-2016	145597.68999999994
@@ -117,7 +190,7 @@ in this case, tells it to sort the tuples based on the _value_ instead of the
 _key_. This creates a sorted list which is stored in `sorted_revenue`.
 
 The time complexity of calling `sorted()` on this list of tuples is O(n log n)
-by using the Timsort sorting algorithm[1].
+by using the Timsort sorting algorithm[2].
 
 #### detailed contribution by partner
 
@@ -132,4 +205,6 @@ by using the Timsort sorting algorithm[1].
 
 #### references
 
-[1]: [Timsort algorithm](https://en.wikipedia.org/wiki/Timsort)
+[1]: [DoubleWritable Java Class](https://hadoop.apache.org/docs/r2.6.1/api/org/apache/hadoop/io/DoubleWritable.html)
+
+[2]: [Timsort Algorithm](https://en.wikipedia.org/wiki/Timsort)
