@@ -248,11 +248,12 @@ File Output Format Counters
 
 ### Sorting the Output of the Hadoop Job
 
-This is helpful, but we want to sort these key-value pairs by revenue and not
-by key. We also might be interested in enriching the data in formats _besides_
-just by month-year. So, the repository contains another script written in Python
-that is responsible for sorting the key-value pairs, both in the initial format
-required by the project in addition to a couple of other interesting orders.
+The output file produced by the Hadoop job is helpful, but we want to sort
+these key-value pairs by revenue and not by key. We also might be interested in
+enriching the data in formats _besides_ just by month-year. So, the repository
+contains another script written in Python that is responsible for sorting the
+key-value pairs, both in the initial format required by the project in addition
+to a couple of other interesting orders.
 
 The script parses the output file line-by-line and creates a key-value pair for
 each month/year-to-revenue pair:
