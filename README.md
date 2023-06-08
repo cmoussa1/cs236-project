@@ -3,12 +3,14 @@
 A project that implements MapReduce on hotel booking data to find the most
 profitable month.
 
-#### Members
+### Members
 Christopher Moussa (Student ID 862327381)
 
 Ramesh Subramaniam
 
-#### Cnstructions for Compilation and Run
+---
+
+### Cnstructions for Compilation and Run
 
 in Windows, start Hadoop in Command Prompt as an administrator:
 
@@ -50,8 +52,9 @@ place output of the Hadoop job on local disk:
 $ hdfs dfs -get /output path/to/local_disk
 ```
 
-once you have the output file of your Hadoop job, you can sort the output by revenue (highest month/year revenue
-at the top) by running the `sort-output.py` Python script:
+once you have the output file of your Hadoop job, you can sort the output by
+revenue (highest month/year revenue at the top) by running the `sort-output.py`
+Python script and passing in the output file created by Hadoop:
 
 ```console
 $ python3 sort-output.py path/to/output-file
@@ -59,7 +62,7 @@ $ python3 sort-output.py path/to/output-file
 
 ---
 
-#### About the Code
+### About the Code
 
 ![mapreduce-diagram](https://github.com/cmoussa1/cs236-project/blob/main/mapreduce%20diagram.png)
 
@@ -134,6 +137,7 @@ switch(csv_input_fields[4]) {
   case "December":
     arrival_mo = 12;
     break;
+}
 ```
 
 The mapper will output this key along with the average price per room, and this
@@ -175,7 +179,7 @@ _by key_:
 9-2018	364047.0699999994
 ```
 
-##### Hadoop Job Statistics
+### Hadoop Job Statistics
 
 _note: these statistics are gathered from running the Hadoop job on my
 (Christopher's) machine._
@@ -242,7 +246,7 @@ File Output Format Counters
     Bytes Written=916
 ```
 
-##### Sorting the Output of the Hadoop Job
+### Sorting the Output of the Hadoop Job
 
 This is helpful, but we want to sort these key-value pairs by revenue and not
 by key. We also might be interested in enriching the data in formats _besides_
@@ -287,11 +291,80 @@ interesting formats:
 months, etc.)
 * ranks total revenue by "year" (also in descending order)
 
+The following code blocks show both the required order for the project as well
+as some other interesting orders that are output by the Python script.
+We start with the required order:
+
+```console
+8-2016: $723470.27
+9-2016: $618959.16
+10-2016: $589978.46
+7-2016: $573715.3
+6-2016: $566123.95
+5-2016: $528075.29
+9-2015: $484902.64
+4-2016: $482651.9
+8-2015: $411934.11
+10-2015: $391084.63
+3-2016: $381430.43
+10-2018: $379361.24
+9-2018: $364047.07
+11-2016: $359605.18
+6-2018: $358628.7
+8-2018: $339280.11
+12-2016: $333389.15
+5-2018: $295680.14
+7-2018: $295200.77
+4-2018: $279068.72
+2-2016: $272767.93
+7-2015: $271588.06
+11-2018: $225227.17
+3-2018: $216661.76
+12-2015: $216311.39
+12-2018: $198725.08
+10-2017: $176057.22
+9-2017: $170399.72
+1-2016: $145597.69
+11-2015: $141757.79
+2-2018: $137570.13
+8-2017: $92366.68
+1-2018: $75796.26
+12-2017: $69999.47
+11-2017: $46803.4
+7-2017: $30815.24
+```
+
+We then re-calculate and output total revenue by season:
+
+```console
+max seasonal revenue was in fall: $3948183.68
+
+seasonal revenue rankings (descending order):
+   fall - $3948183.68
+   summer - $3663123.19
+   spring - $2183568.24
+   winter - $1450157.1
+```
+
+We also re-calculate and output total revenue by year:
+
+```console
+max yearly revenue was in 2016: $5575764.71
+
+yearly revenue rankings (descending order):
+   2016 - $5575764.71
+   2018 - $3165247.15
+   2015 - $1917578.62
+   2017 - $586441.73
+```
+
+The total runtime for this Python script is less than 1 second.
+
 ---
 
-#### Detailed Contribution by Partner
+### Detailed Contribution by Partner
 
-##### Christopher Moussa
+#### Christopher Moussa
 
 * set up GitHub repository for project
 * wrote MapReduce Java code
