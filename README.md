@@ -22,8 +22,8 @@ remove any previous `/input` and `/output` directories (Hadoop will complain
 about this if these directories already exist):
 
 ```console
-$ hdfs -rm -r /input
-$ hdfs -rm -r /output
+$ hdfs dfs -rm -r /input
+$ hdfs dfs -rm -r /output
 ```
 
 compile the Java file:
