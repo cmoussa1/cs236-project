@@ -10,7 +10,7 @@ Ramesh Subramaniam
 
 ---
 
-### Cnstructions for Compilation and Run
+### Instructions for Compilation and Run
 
 in Windows, start Hadoop in Command Prompt as an administrator:
 
