@@ -3,12 +3,26 @@
 A project that implements MapReduce on hotel booking data to find the most
 profitable month.
 
-#### members
+#### Members
 Christopher Moussa (Student ID 862327381)
 
 Ramesh Subramaniam
 
-#### instructions for compilation and run
+#### Cnstructions for Compilation and Run
+
+in Windows, start Hadoop in Command Prompt as an administrator:
+
+```console
+C:\Hadoop\hadoop-3.3.0\sbin> start-all.cmd
+```
+
+remove any previous `/input` and `/output` directories (Hadoop will complain
+about this if these directories already exist):
+
+```console
+$ hdfs -rm -r /input
+$ hdfs -rm -r /output
+```
 
 compile the Java file:
 
@@ -43,7 +57,9 @@ at the top) by running the `sort-output.py` Python script:
 $ python3 sort-output.py path/to/output-file
 ```
 
-#### about the code
+---
+
+#### About the Code
 
 ![mapreduce-diagram](https://github.com/cmoussa1/cs236-project/blob/main/mapreduce%20diagram.png)
 
@@ -159,6 +175,75 @@ _by key_:
 9-2018	364047.0699999994
 ```
 
+##### Hadoop Job Statistics
+
+_note: these statistics are gathered from running the Hadoop job on my
+(Christopher's) machine._
+
+The Hadoop job on my (Christopher) machine has a total runtime of about 18
+seconds.
+
+The following console output blocks show snapshots of the statistics reported
+by running the Hadoop job. Here is Hadoop reporting that the job ran
+successfully:
+
+```
+2023-06-08 10:43:57,954 INFO mapreduce.Job:  map 0% reduce 0%
+2023-06-08 10:44:03,046 INFO mapreduce.Job:  map 50% reduce 0%
+2023-06-08 10:44:04,058 INFO mapreduce.Job:  map 100% reduce 0%
+2023-06-08 10:44:08,105 INFO mapreduce.Job:  map 100% reduce 100%
+2023-06-08 10:44:08,109 INFO mapreduce.Job: Job job_1686245305254_0002 completed successfully
+```
+
+File System Counters reports the following statistics about the HDFS
+distribution:
+
+```console
+2023-06-08 10:44:08,160 INFO mapreduce.Job: Counters: 55
+File System Counters
+    FILE: Number of bytes read=630
+    FILE: Number of bytes written=798077
+    FILE: Number of read operations=0
+    FILE: Number of large read operations=0
+    FILE: Number of write operations=0
+    HDFS: Number of bytes read=8164798
+    HDFS: Number of bytes written=916
+    HDFS: Number of read operations=11
+    HDFS: Number of large read operations=0
+    HDFS: Number of write operations=2
+    HDFS: Number of bytes read erasure-coded=0
+```
+
+The Job Counters section breaks down the time spent by the numerous map and
+reduce tasks:
+
+```console
+Job Counters
+    Killed map tasks=1
+    Launched map tasks=2
+    Launched reduce tasks=1
+    Rack-local map tasks=2
+    Total time spent by all maps in occupied slots (ms)=3912
+    Total time spent by all reduces in occupied slots (ms)=1969
+    Total time spent by all map tasks (ms)=3912
+    Total time spent by all reduce tasks (ms)=1969
+    Total vcore-milliseconds taken by all map tasks=3912
+    Total vcore-milliseconds taken by all reduce tasks=1969
+    Total megabyte-milliseconds taken by all map tasks=4005888
+    Total megabyte-milliseconds taken by all reduce tasks=2016256
+```
+
+And here are the counters for both the input and output files:
+
+```console
+File Input Format Counters
+    Bytes Read=8164570
+File Output Format Counters
+    Bytes Written=916
+```
+
+##### Sorting the Output of the Hadoop Job
+
 This is helpful, but we want to sort these key-value pairs by revenue and not
 by key. We also might be interested in enriching the data in formats _besides_
 just by month-year. So, the repository contains another script written in Python
@@ -202,9 +287,11 @@ interesting formats:
 months, etc.)
 * ranks total revenue by "year" (also in descending order)
 
-#### detailed contribution by partner
+---
 
-##### christopher moussa
+#### Detailed Contribution by Partner
+
+##### Christopher Moussa
 
 * set up GitHub repository for project
 * wrote MapReduce Java code
@@ -213,7 +300,7 @@ months, etc.)
 * created high-level diagram for both MapReduce job and project workflow
 (linked in repository and in README)
 
-#### references
+#### References
 
 [1]: [DoubleWritable Java Class](https://hadoop.apache.org/docs/r2.6.1/api/org/apache/hadoop/io/DoubleWritable.html)
 
