@@ -162,8 +162,8 @@ switch(csv_input_fields[4]) {
 ```
 
 Finally, we need to calculate the total cost of each reservation. We accomplish
-this by adding up the total number of nights stayed (`stays_in_weekend_nights`
-+ `stays_in_week_nights`) and multiplying it by the average price of the room
+this by adding up the total number of nights stayed (`stays_in_weekend_nights` +
+`stays_in_week_nights`) and multiplying it by the average price of the room
 (`avg_price_per_room`):
 
 ```java
