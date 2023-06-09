@@ -34,9 +34,9 @@ def enrich_by_month_year(file_object):
     # print out the dictionary in reverse so that the key-value pair with the
     # highest revenue gets printed out first
     #
-    # format: month-year: $000.00
+    # format: month-year: 000.00
     for month_year in reversed(sorted_revenue):
-        print(f"{month_year[0]}: ${month_year[1]}")
+        print(f"{month_year[0]}: {month_year[1]}")
 
     return revenue_dict
 
@@ -93,13 +93,13 @@ def enrich_by_season(revenue_dict):
     seasonal_revenue["summer"] = round(float(summer_revenue), 2)
 
     print(
-        f"max seasonal revenue was in {max(seasonal_revenue, key=lambda key: seasonal_revenue[key])}: ${max(seasonal_revenue.values())}\n"
+        f"max seasonal revenue was in {max(seasonal_revenue, key=lambda key: seasonal_revenue[key])}: {max(seasonal_revenue.values())}\n"
     )
 
     print("seasonal revenue rankings (descending order):")
     sorted_seasonal_revenue = sorted(seasonal_revenue.items(), key=lambda x: x[1])
     for season in reversed(sorted_seasonal_revenue):
-        print(f"   {season[0]} - ${season[1]}")
+        print(f"   {season[0]} - {season[1]}")
 
 
 def enrich_by_year(revenue_dict):
@@ -147,13 +147,13 @@ def enrich_by_year(revenue_dict):
     yearly_revenue[2018] = round(float(revenue_2018), 2)
 
     print(
-        f"max yearly revenue was in {max(yearly_revenue, key=lambda key: yearly_revenue[key])}: ${max(yearly_revenue.values())}\n"
+        f"max yearly revenue was in {max(yearly_revenue, key=lambda key: yearly_revenue[key])}: {max(yearly_revenue.values())}\n"
     )
 
     print("yearly revenue rankings (descending order):")
     sorted_yearly_revenue = sorted(yearly_revenue.items(), key=lambda x: x[1])
     for year in reversed(sorted_yearly_revenue):
-        print(f"   {year[0]} - ${year[1]}")
+        print(f"   {year[0]} - {year[1]}")
 
 
 def main():
