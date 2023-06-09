@@ -108,10 +108,31 @@ line:
 avg_price_per_room = Double.parseDouble(csv_input_fields[8]);
 arrival_yr = Integer.parseInt(csv_input_fields[4]);
 arrival_mo = Integer.parseInt(csv_input_fields[5]);
+stays_in_weekend_nights = Integer.parseInt(csv_input_fields[1]);
+stays_in_week_nights = Integer.parseInt(csv_input_fields[2]);
 ```
 
 Note that we still have to cast each field to its respective data type from
 when it is initially read in the `.csv` file.
+
+Both `.csv` files contain data about the status of the reservation;
+specifically, whether the reservation was fulfilled or not. If it was canceled,
+the revenue from this reservation should **not** be added to the total
+revenue for a given month/year key. So, the `map ()` function contains a check
+for this field in both files, and if the reservation was canceled, it sets a
+a revenue for a reservation room to 0. In `customer-reservations.csv`, the
+field is a string: "Canceled" vs. "Not_Canceled":
+
+```java
+boolean canceled = csv_input_fields[9].equals("Canceled");
+```
+
+In `hotel-booking,csv`, the field is an integer: `1` for canceled and `0` for
+not canceled:
+
+```java
+boolean canceled = Integer.parseInt(csv_input_fields[1]) == 1;
+```
 
 Because the data in `customer-reservations.csv` and `hotel-booking.csv` is
 formatted differently, in our `map()` function, we need to convert some of
@@ -140,16 +161,25 @@ switch(csv_input_fields[4]) {
 }
 ```
 
-The mapper will output this key along with the average price per room, and this
+Finally, we need to calculate the total cost of each reservation. We accomplish
+this by adding up the total number of nights stayed (`stays_in_weekend_nights`
++ `stays_in_week_nights`) and multiplying it by the average price of the room
+(`avg_price_per_room`):
+
+```java
+total_cost = total_nights * avg_price_per_room;
+```
+
+The mapper will output this key along with the the total cost, and this
 data will be sent to the reducer.
 
 ```java
 out_key.set(comp_key);
-out_value.set(avg_price_per_room);
+out_value.set(total_cost);
 ```
 
 Within the `Reducer` class, we pass the key-value pairs we created in `map()`,
-where the average price per room values are iterated over and applied to a
+where the total cost of all the reservations are iterated over and applied to a
 `total_revenue` variable. This becomes the final value applied to each key
 containing a month/year.
 
@@ -170,13 +200,13 @@ The key-value pairs are written to an output file where they are sorted
 _by key_:
 
 ```
-1-2016	145597.68999999994
-1-2018	75796.26000000004
-10-2015	391084.6299999965
+1-2016	382496.53999999986
+1-2018	293461.93999999994
+10-2015	1152197.140000005
 .
 .
 .
-9-2018	364047.0699999994
+9-2018	777766.8400000002
 ```
 
 ### Hadoop Job Statistics
@@ -297,66 +327,66 @@ as some other interesting orders that are output by the Python script.
 We start with the required order:
 
 ```console
-8-2016: $723470.27
-9-2016: $618959.16
-10-2016: $589978.46
-7-2016: $573715.3
-6-2016: $566123.95
-5-2016: $528075.29
-9-2015: $484902.64
-4-2016: $482651.9
-8-2015: $411934.11
-10-2015: $391084.63
-3-2016: $381430.43
-10-2018: $379361.24
-9-2018: $364047.07
-11-2016: $359605.18
-6-2018: $358628.7
-8-2018: $339280.11
-12-2016: $333389.15
-5-2018: $295680.14
-7-2018: $295200.77
-4-2018: $279068.72
-2-2016: $272767.93
-7-2015: $271588.06
-11-2018: $225227.17
-3-2018: $216661.76
-12-2015: $216311.39
-12-2018: $198725.08
-10-2017: $176057.22
-9-2017: $170399.72
-1-2016: $145597.69
-11-2015: $141757.79
-2-2018: $137570.13
-8-2017: $92366.68
-1-2018: $75796.26
-12-2017: $69999.47
-11-2017: $46803.4
-7-2017: $30815.24
+8-2016: 2619095.32
+7-2016: 2173409.5
+9-2016: 1877089.8
+6-2016: 1682397.44
+8-2015: 1622785.1
+5-2016: 1569233.94
+9-2015: 1525256.12
+10-2016: 1509066.1
+4-2016: 1293336.9
+3-2016: 1158918.14
+10-2015: 1152197.14
+7-2015: 1108981.14
+11-2016: 1019546.48
+12-2016: 975764.22
+6-2018: 850484.1
+10-2018: 829240.48
+8-2018: 788780.94
+12-2018: 781086.08
+9-2018: 777766.84
+5-2018: 753424.8
+7-2018: 748720.72
+4-2018: 722705.78
+2-2016: 689667.68
+3-2018: 651878.34
+11-2018: 640184.84
+12-2015: 640085.64
+9-2017: 621614.08
+10-2017: 615946.66
+11-2015: 534079.04
+2-2018: 409208.62
+1-2016: 382496.54
+12-2017: 317900.7
+8-2017: 305291.94
+1-2018: 293461.94
+11-2017: 191827.48
+7-2017: 38000.02
 ```
 
 We then re-calculate and output total revenue by season:
 
 ```console
-max seasonal revenue was in fall: $3948183.68
+max seasonal revenue was in summer: 11937946.22
 
 seasonal revenue rankings (descending order):
-   fall - $3948183.68
-   summer - $3663123.19
-   spring - $2183568.24
-   winter - $1450157.1
+   summer - 11937946.22
+   fall - 11293815.06
+   spring - 6149497.9
+   winter - 4489671.42
 ```
 
 We also re-calculate and output total revenue by year:
 
 ```console
-max yearly revenue was in 2016: $5575764.71
+max yearly revenue was in 2016: 16950022.06
 
 yearly revenue rankings (descending order):
-   2016 - $5575764.71
-   2018 - $3165247.15
-   2015 - $1917578.62
-   2017 - $586441.73
+   2016 - 16950022.06
+   2018 - 8246943.48
+   2015 - 6583384.18
+   2017 - 2090580.88
 ```
 
 The total runtime for this Python script is less than 1 second.
