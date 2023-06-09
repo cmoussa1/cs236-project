@@ -83,6 +83,10 @@ the job, which is then sent to the reducer. The benefit of this is it decreases
 the volume of data sent. It's important to note that it does the same things as
 the `Reducer` class, but operates within the output of each mapper.
 
+The `map()` portion of MapReduceHadoop is responsible for processing the two
+input files containing hotel reservation data. Each line of each input file is
+passed in for processing [1].
+
 We create our key in the `map()` function according to the arrival month and
 year because we want to associate revenue to a specific month and year.
 
@@ -95,14 +99,26 @@ out_key.set(comp_key);
 
 Parsing _most_ of the data we need is pretty straightforward. Because the data
 is in `.csv` format, we can just fetch (and cast) the necessary data using an
-array of `String`s:
+array of `String`s on each line in the input files:
 
 ```java
 String[] csv_input_fields = value.toString().split(",");
 ```
 
 Then, we can parse each field according to its index in the comma-delimited
-line:
+line. For the purposes of the project, we extract the following information
+for every line in the input files:
+
+- the month and year of the reservation
+
+This will help us create our key.
+
+- how many nights the reservation is for
+- the average price per night per reservation
+
+These two fields will help us calculate the cost of each reservation. In Java,
+we parse each field and convert it to an appropriate data type for further
+processing:
 
 ```java
 avg_price_per_room = Double.parseDouble(csv_input_fields[8]);
@@ -112,15 +128,14 @@ stays_in_weekend_nights = Integer.parseInt(csv_input_fields[1]);
 stays_in_week_nights = Integer.parseInt(csv_input_fields[2]);
 ```
 
-Note that we still have to cast each field to its respective data type from
-when it is initially read in the `.csv` file.
-
 Both `.csv` files contain data about the status of the reservation;
 specifically, whether the reservation was fulfilled or not. If it was canceled,
 the revenue from this reservation should **not** be added to the total
 revenue for a given month/year key. So, the `map ()` function contains a check
 for this field in both files, and if the reservation was canceled, it sets a
-a revenue for a reservation room to 0. In `customer-reservations.csv`, the
+a revenue for a reservation room to 0. However, the data concerning the
+reservation status in either input file is formatted differently, so we use
+separate logic to handle either case. In `customer-reservations.csv`, the
 field is a string: "Canceled" vs. "Not_Canceled":
 
 ```java
@@ -134,30 +149,30 @@ not canceled:
 boolean canceled = Integer.parseInt(csv_input_fields[1]) == 1;
 ```
 
-Because the data in `customer-reservations.csv` and `hotel-booking.csv` is
-formatted differently, in our `map()` function, we need to convert some of
-this data so we can correctly create our keys before sending them to be
-reduced and have their revenue data aggregated. Specifically, the
-"arrival_month" field in `hotel-booking.csv` is written in String format, not
-in an integer format like `customer-reservations.csv`. So, the code contains a
-`switch` statement to associate each "string" month with its integer
+Mentioned above, the data in `customer-reservations.csv` and
+`hotel-booking.csv` is formatted differently, so in our `map()` function, we
+need to convert some of this data so we can correctly create our keys before
+sending them to be reduced and have their revenue data aggregated. Specifically,
+the "arrival_month" field in `hotel-booking.csv` is written in String format,
+not in an integer format like `customer-reservations.csv`. So, the code
+contains a `switch` statement to associate each "string" month with its integer
 equivalent:
 
 ```java
 switch(csv_input_fields[4]) {
   case "January":
     arrival_mo = 1;
-    break;
+  break;
 
   case "February":
     arrival_mo = 2;
-    break;
+  break;
   
   ...
 
   case "December":
     arrival_mo = 12;
-    break;
+  break;
 }
 ```
 
@@ -170,8 +185,8 @@ this by adding up the total number of nights stayed (`stays_in_weekend_nights` +
 total_cost = total_nights * avg_price_per_room;
 ```
 
-The mapper will output this key along with the the total cost, and this
-data will be sent to the reducer.
+The mapper will output this key along with the the total cost, and this data
+will be sent to the reducer.
 
 ```java
 out_key.set(comp_key);
@@ -185,8 +200,8 @@ where the total cost of all the reservations are iterated over and applied to a
 containing a month/year.
 
 The `reduce()` function takes each month-year composite key, and for each key,
-iterates over its `Double` values using a for-each loop[1]. They are then
-aggregated to the `total_revenue` variable. So, at the end of each loop, the
+iterates over its `Double` values using a for-each loop [2]. They are then
+aggregated to a `total_revenue` variable. So, at the end of each loop, the
 key will have a sum of all revenue associated with the current key. In total,
 there will be a for-each loop for every month-year key created in the `map()`
 function.
@@ -313,7 +328,7 @@ in this case, tells it to sort the tuples based on the _value_ instead of the
 _key_. This creates a sorted list which is stored in `sorted_revenue`.
 
 The time complexity of calling `sorted()` on this list of tuples is O(n log n)
-by using the Timsort sorting algorithm[2].
+by using the Timsort sorting algorithm [3].
 
 In terms of ranking the key-value pairs by their total revenue in decreasing
 order, the Python script also sorts the data in a couple of other potentially
@@ -407,6 +422,8 @@ The total runtime for this Python script is less than 1 second.
 
 #### References
 
-[1]: [DoubleWritable Java Class](https://hadoop.apache.org/docs/r2.6.1/api/org/apache/hadoop/io/DoubleWritable.html)
+[1]: [MapReduce Description](https://www.tutorialspoint.com/hadoop/hadoop_mapreduce.htm)
 
-[2]: [Timsort Algorithm](https://en.wikipedia.org/wiki/Timsort)
+[2]: [DoubleWritable Java Class](https://hadoop.apache.org/docs/r2.6.1/api/org/apache/hadoop/io/DoubleWritable.html)
+
+[3]: [Timsort Algorithm](https://en.wikipedia.org/wiki/Timsort)
