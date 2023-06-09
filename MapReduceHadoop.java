@@ -87,9 +87,7 @@ public class MapReduceHadoop {
                 // - avg_price_per_room
                 // - arrival_year
                 // - arrival_month
-                avg_price_per_room = Double.parseDouble(csv_input_fields[8]);
-                arrival_yr = Integer.parseInt(csv_input_fields[4]);
-                arrival_mo = Integer.parseInt(csv_input_fields[5]);
+                // - booking_status
 
                 // we need to check if the reservation was canceled or not;
                 // if it is canceled, we should just set the price_per_room
@@ -97,7 +95,11 @@ public class MapReduceHadoop {
                 boolean canceled = csv_input_fields[9].equals("Canceled");
                 if (canceled == true) {
                     avg_price_per_room = 0.0;
+                } else {
+                    avg_price_per_room = Double.parseDouble(csv_input_fields[8]);
                 }
+                arrival_yr = Integer.parseInt(csv_input_fields[4]);
+                arrival_mo = Integer.parseInt(csv_input_fields[5]);
             } else {
                 // we know that we are parsing hotel-booking, so we need to extract
                 // the relevant fields for this specific .csv file, which consists
@@ -106,7 +108,17 @@ public class MapReduceHadoop {
                 // - avg_price_per_room
                 // - arrival_year
                 // - arrival_month
-                avg_price_per_room = Double.parseDouble(csv_input_fields[11]);
+                // - booking_status
+
+                // same check as for customer-reservations.csv; if the customer
+                // canceled their reservation, we shouldn't add their revenue
+                // to the total revenue for a given month/year
+                boolean canceled = Integer.parseInt(csv_input_fields[1]) == 1;
+                if (canceled == true) {
+                    avg_price_per_room = 0.0;
+                } else {
+                    avg_price_per_room = Double.parseDouble(csv_input_fields[11]);
+                }
                 arrival_yr = Integer.parseInt(csv_input_fields[3]);
                 // the arrival_month field in hotel-booking.csv is in String format,
                 // so we need to map the month to an integer value
