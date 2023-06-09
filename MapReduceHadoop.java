@@ -80,6 +80,10 @@ public class MapReduceHadoop {
             double avg_price_per_room = 0.0;
             int arrival_yr = 0;
             int arrival_mo = 0;
+            int stays_in_weekend_nights = 0;
+            int stays_in_week_nights = 0;
+            int total_nights = 0;
+            double total_cost = 0.0;
 
             if (inputFileTag.contains("customer-reservations")) {
                 // extract relevant fields for the map phase, consisting of:
@@ -100,6 +104,12 @@ public class MapReduceHadoop {
                 }
                 arrival_yr = Integer.parseInt(csv_input_fields[4]);
                 arrival_mo = Integer.parseInt(csv_input_fields[5]);
+
+                stays_in_weekend_nights = Integer.parseInt(csv_input_fields[1]);
+                stays_in_week_nights = Integer.parseInt(csv_input_fields[2]);
+                total_nights = stays_in_week_nights + stays_in_week_nights;
+
+                total_cost = total_nights * avg_price_per_room;
             } else {
                 // we know that we are parsing hotel-booking, so we need to extract
                 // the relevant fields for this specific .csv file, which consists
@@ -171,6 +181,12 @@ public class MapReduceHadoop {
                         arrival_mo = 12;
                     break;
                 }
+
+                stays_in_weekend_nights = Integer.parseInt(csv_input_fields[7]);
+                stays_in_week_nights = Integer.parseInt(csv_input_fields[8]);
+                total_nights = stays_in_week_nights + stays_in_week_nights;
+
+                total_cost = total_nights * avg_price_per_room;
             }
 
             // create month-year composite key to map revenue to
@@ -178,7 +194,7 @@ public class MapReduceHadoop {
 
             // output key
             out_key.set(comp_key);
-            out_value.set(avg_price_per_room);
+            out_value.set(total_cost);
             context.write(out_key, out_value);
         }
     }
