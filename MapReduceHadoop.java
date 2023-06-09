@@ -90,6 +90,14 @@ public class MapReduceHadoop {
                 avg_price_per_room = Double.parseDouble(csv_input_fields[8]);
                 arrival_yr = Integer.parseInt(csv_input_fields[4]);
                 arrival_mo = Integer.parseInt(csv_input_fields[5]);
+
+                // we need to check if the reservation was canceled or not;
+                // if it is canceled, we should just set the price_per_room
+                // to 0 because the customer never actually stayed there
+                boolean canceled = csv_input_fields[9].equals("Canceled");
+                if (canceled == true) {
+                    avg_price_per_room = 0.0;
+                }
             } else {
                 // we know that we are parsing hotel-booking, so we need to extract
                 // the relevant fields for this specific .csv file, which consists
