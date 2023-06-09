@@ -176,6 +176,7 @@ data will be sent to the reducer.
 ```java
 out_key.set(comp_key);
 out_value.set(total_cost);
+context.write(out_key, out_value);
 ```
 
 Within the `Reducer` class, we pass the key-value pairs we created in `map()`,
