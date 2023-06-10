@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 
-###################################################
-#
-# A custom Python script to sort the output of the
-# Hadoop job by revenue in decreasing order (i.e
-# highest revenue at the top).
-#
-# author: christopher moussa
-#
-# usage: python3 sort-output.py path/to/output_file
-###################################################
+###############################################################################
+#                                                                             #
+# A custom Python script to sort the output of the Hadoop job by revenue in   #
+# decreasing order (i.e highest revenue at the top) as well as a few other    #
+# interesting orders.                                                         #
+#                                                                             #
+# author: christopher moussa                                                  #
+#                                                                             #
+# usage: python3 sort-output.py path/to/output_file                           #
+#                                                                             #
+###############################################################################
 import sys
 import os
 
@@ -156,6 +157,46 @@ def enrich_by_year(revenue_dict):
         print(f"   {year[0]} - {year[1]}")
 
 
+def enrich_by_month(revenue_dict):
+    # dictionary of lists to hold key-value pairs by month
+    revenue_by_month = {month: [] for month in range(1, 13)}
+
+    # dictionary to convert month numbers to their respective names
+    month_int_to_str = {
+        1: "january",
+        2: "february",
+        3: "march",
+        4: "april",
+        5: "may",
+        6: "june",
+        7: "july",
+        8: "august",
+        9: "september",
+        10: "october",
+        11: "november",
+        12: "december",
+    }
+
+    # "for every key in the dictionary"
+    for i in revenue_dict:
+        month_year = i.split("-")
+        revenue_by_month[int(month_year[0])].append(i)
+
+    # now, add up the revenue for each month
+    monthly_revenue = {month: round(sum(revenue_dict[key] for key in revenue_by_month[month]), 2) for month in range(1, 13)}
+
+    most_profitable_month = max(monthly_revenue, key=lambda key: monthly_revenue[key])
+
+    print(
+        f"max monthly revenue was in {month_int_to_str[most_profitable_month]}: {max(monthly_revenue.values())}\n"
+    )
+
+    print("monthly revenue rankings (descending order):")
+    sorted_monthly_revenue = sorted(monthly_revenue.items(), key=lambda x: x[1])
+    for month in reversed(sorted_monthly_revenue):
+        print(f"   {month_int_to_str[month[0]]} - {month[1]}")
+
+
 def main():
     # read in output file from the command line
     try:
@@ -164,27 +205,36 @@ def main():
         print("Usage: python3 " + os.path.basename(__file__) + " path/to/output_file")
         sys.exit(1)
 
+    print("sorted hadoop output file: revenue by month/year")
+    print("------------------------------------------------")
     revenue_dict = enrich_by_month_year(file_object)
 
-    file_object.close()
+    print()
 
-    print()
-    print("-----------------")
-    print()
+    file_object.close()
 
     #######################################
     # start of extra credit opportunities #
     #######################################
 
-    print("output extra credit opportunities\n")
-
     # extra credit 1: enriching data set (sorting by season)
+    print("data enrichment #1: enrich data by season")
+    print("-----------------------------------------")
     enrich_by_season(revenue_dict)
 
     print()
 
     # extra credit 2: enriching data set (sorting by year)
+    print("data enrichment #2: enrich data by year")
+    print("---------------------------------------")
     enrich_by_year(revenue_dict)
+
+    print()
+
+    # extra credit 3: enriching data set (sort by month)
+    print("data enrichment #3: enrich data by month")
+    print("----------------------------------------")
+    enrich_by_month(revenue_dict)
 
 
 if __name__ == "__main__":
