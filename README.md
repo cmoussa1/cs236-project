@@ -414,6 +414,27 @@ yearly revenue rankings (descending order):
    2017 - 2090580.88
 ```
 
+We also re-calculate and output total revenue by month (extra credit
+opportunity #3):
+
+```console
+max monthly revenue was in august: 5335953.3
+
+monthly revenue rankings (descending order):
+   august - 5335953.3
+   september - 4801726.84
+   october - 4106450.38
+   july - 4069111.38
+   december - 2714836.64
+   june - 2532881.54
+   november - 2385637.84
+   may - 2322658.74
+   april - 2016042.68
+   march - 1810796.48
+   february - 1098876.3
+   january - 675958.48
+```
+
 The total runtime for this Python script is less than 1 second.
 
 ---
