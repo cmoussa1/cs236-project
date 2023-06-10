@@ -4,9 +4,9 @@ A project that implements MapReduce on hotel booking data to find the most
 profitable month.
 
 ### Members
-Christopher Moussa (Student ID 862327381)
+Christopher Moussa (Student ID 862327381) cmous003@ucr.edu
 
-Ramesh Subramaniam
+Ramesh Subramaniam (Student ID 86322586) rsubr011@ucr.edu
 
 ---
 
@@ -310,7 +310,7 @@ tmp_dict = dict(item.split('=') for item in line.split(','))
 
 We want to insert each key-value pair into a dictionary that holds all of them
 (note that we clean up the value for each pair slightly by rounding to two
-decimal places to represent an actual US dollar/cents value):
+decimal places to represent an actual currency value):
 
 ```python
 revenue_dict[i] = round(float(tmp_dict[i]), 2)
@@ -409,6 +409,66 @@ The total runtime for this Python script is less than 1 second.
 
 ---
 
+### Roadblocks, Confusions, and Obstacles, oh my!
+
+This was the first time I had ever worked with Hadoop, and for that reason,
+I faced a number of differently-sized roadblocks while coming up with the
+implementation for this project.
+
+Hadoop was kind of a pain to install on my Mac computer because of some Java
+and JDK incompatibilities. Switching over to a Windows system and running
+Hadoop as an administrator helped resolve this issue. However, specifying
+the paths for the datanodes proved to be a much harder thing to do than I
+originally thought:
+
+```xml
+<property> 
+<name>dfs.datanode.data.dir</name> 
+<value>/Hadoop/hadoop-3.3.0/data/datanode</value>
+</property> 
+```
+
+It is **SO** important when installing Hadoop to point datanodes and namenodes
+to the right locations. Not setting these correctly caused setting up HDFS
+(which I _believe_ is needed before you can even run a Hadoop job) to
+repeatedly fail.
+
+There were other, smaller, issues with setting up Hadoop, and
+I think one of the reasons for it is that Hadoop installation tutorials seem
+to look different with every tutorial blog, so I had to use a few different
+ones to set it up and run it correctly.
+
+Another minor roadblock came up with testing the MapReduce code. I was never
+quite able to figure out how to unit test my Java code, so I found myself
+running Hadoop job after Hadoop job to figure out how the code was behaving.
+Luckily, in my case, the Hadoop job runs (on average) in less than 20 seconds,
+which would most likely have around the same runtime as running
+a number of unit tests. So, I had to just bite the bullet and live with
+re-compiling and re-submitting Hadoop jobs, one after the other, sometimes
+getting bogus results and having to "spelunk" my code manually.
+
+Trying to understand the statistics of the Hadoop job was also a little
+confusing at the start. Hadoop outputs a lot of different statistics about the
+job it ran and some of it does not appear straightforward at the start. Here's
+one example:
+
+```console
+Total vcore-milliseconds taken by all map tasks=4266
+Total vcore-milliseconds taken by all reduce tasks=2078
+Total megabyte-milliseconds taken by all map tasks=4368384
+Total megabyte-milliseconds taken by all reduce tasks=2127872
+```
+
+These didn't make a lot of sense to me at first, but a couple of Google
+searches  helped clear these up. This data is essentially explaining how much
+CPU time and memory was consumed by the mappers and reducers to perform their
+respective operations during execution. Using the internet to help define the
+various statistics about the Hadoop job helped me gain a better understanding
+of How Hadoop breaks down large datasets and executes them over parallel tasks
+in an efficient manner.
+
+---
+
 ### Detailed Contribution by Partner
 
 #### Christopher Moussa
@@ -419,6 +479,11 @@ The total runtime for this Python script is less than 1 second.
 * created project README and project description
 * created high-level diagram for both MapReduce job and project workflow
 (linked in repository and in README)
+
+#### Ramesh Subramaniam
+
+* helped design MapReduce Java class
+* helped prepare project presentation and demo
 
 #### References
 
