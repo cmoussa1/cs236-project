@@ -299,7 +299,7 @@ these key-value pairs by revenue and not by key. We also might be interested in
 enriching the data in formats _besides_ just by month-year. So, the repository
 contains another script written in Python that is responsible for sorting the
 key-value pairs, both in the initial format required by the project in addition
-to a couple of other interesting orders.
+to a couple of other interesting orders to attempt some extra credit.
 
 The script parses the output file line-by-line and creates a key-value pair for
 each month/year-to-revenue pair:
@@ -381,7 +381,8 @@ We start with the required order:
 7-2017: 38000.02
 ```
 
-We then re-calculate and output total revenue by season:
+We then re-calculate and output total revenue by season (extra credit
+opportunity #1):
 
 ```console
 max seasonal revenue was in summer: 11937946.22
@@ -393,7 +394,8 @@ seasonal revenue rankings (descending order):
    winter - 4489671.42
 ```
 
-We also re-calculate and output total revenue by year:
+We also re-calculate and output total revenue by year (extra credit
+opportunity #2):
 
 ```console
 max yearly revenue was in 2016: 16950022.06
