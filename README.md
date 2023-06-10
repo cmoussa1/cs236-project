@@ -57,7 +57,7 @@ revenue (highest month/year revenue at the top) by running the `sort-output.py`
 Python script and passing in the output file created by Hadoop:
 
 ```console
-$ python3 sort-output.py path/to/output-file
+$ python3 sort-output.py path/to/output-file > sorted_output.txt
 ```
 
 ---
@@ -299,7 +299,14 @@ these key-value pairs by revenue and not by key. We also might be interested in
 enriching the data in formats _besides_ just by month-year. So, the repository
 contains another script written in Python that is responsible for sorting the
 key-value pairs, both in the initial format required by the project in addition
-to a couple of other interesting orders to attempt some extra credit.
+to a couple of other interesting orders to attempt some extra credit. Note that
+redirecting the output of the Python script to a file is important if you want
+to keep the output of the script, i.e:
+
+```console
+$ python3 sort-output.py path/to/output-file > sorted_output.txt
+                                             ^^^^^^^^^^^^^^^^^^^
+```
 
 The script parses the output file line-by-line and creates a key-value pair for
 each month/year-to-revenue pair:
