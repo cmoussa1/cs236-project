@@ -513,7 +513,8 @@ in an efficient manner.
 #### Ramesh Subramaniam
 
 * helped design MapReduce Java class
-* helped prepare project presentation and demo
+* performed code review on MapReduceHadoop.java and sort-output.py
+* prepared project presentation and demo
 
 #### References
 
